@@ -3,6 +3,7 @@ import './App.css';
 import List from './components/List/List';
 import Form from './components/Form/Form';
 import Filter from './components/Filter/Filter';
+import Alert from './components/Alert/Alert';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       </div>
       <div>
         <Form />
+        <Alert />
         <div>
           <Filter />
         </div>

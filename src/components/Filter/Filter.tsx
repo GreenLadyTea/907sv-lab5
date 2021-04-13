@@ -18,13 +18,14 @@ export default function Filter() {
             onChange={e => dispatch(search(e.target.value))}
           />
         </label>
-        {options.map(item => (<>
-          {/* eslint-disable-next-line */}
-          <a key={item} onClick={() => dispatch(filter(item))}>
-            {item}{' '}
-          </a>
-          </>)
-        )}
+        {options.map(item => (
+          <>
+            {/* eslint-disable-next-line */}
+            <a key={item} onClick={() => dispatch(filter(item))}>
+              {item}{' '}
+            </a>
+          </>
+        ))}
       </div>
     </>
   );

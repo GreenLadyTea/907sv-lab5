@@ -2,10 +2,16 @@ import { SELECTOR_TYPES, Store } from './store';
 
 export function selectByChecked(state: Store): Store {
   if (state.filtered === SELECTOR_TYPES.DONE) {
-    return { ...state, list: [...state.list.filter(element => element.isChecked)] };
+    return {
+      ...state,
+      list: [...state.list.filter(element => element.isChecked)]
+    };
   }
   if (state.filtered === SELECTOR_TYPES.NOT_DONE) {
-    return { ...state, list: [...state.list.filter(element => !element.isChecked)] };
+    return {
+      ...state,
+      list: [...state.list.filter(element => !element.isChecked)]
+    };
   }
   return state;
 }

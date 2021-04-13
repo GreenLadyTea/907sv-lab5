@@ -1,10 +1,9 @@
 import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 
-//const URL = 'http://localhost:3001';
-
 export enum ACTION_TYPES {
   ADD = 'add',
+  ADD_ALL = 'add_all',
   REMOVE = 'remove',
   CHECK = 'check',
   FILTER = 'filter',
@@ -20,7 +19,11 @@ export enum REQUEST_STATUS {
   ERROR
 }
 
-type REQUEST_STATUS_TYPE = typeof REQUEST_STATUS.ERROR | typeof REQUEST_STATUS.IDLE | typeof REQUEST_STATUS.SUCCESS | typeof REQUEST_STATUS.LOADING;
+type REQUEST_STATUS_TYPE =
+  | typeof REQUEST_STATUS.ERROR
+  | typeof REQUEST_STATUS.IDLE
+  | typeof REQUEST_STATUS.SUCCESS
+  | typeof REQUEST_STATUS.LOADING;
 
 export enum SELECTOR_TYPES {
   ALL = 'Все',
@@ -35,7 +38,12 @@ export type SELECTOR_TYPE =
 
 export interface ActionAdd {
   type: typeof ACTION_TYPES.ADD;
-  payload: string;
+  payload: Item;
+}
+
+export interface ActionAddAll {
+  type: typeof ACTION_TYPES.ADD_ALL;
+  payload: Item[];
 }
 
 export interface ActionRemove {
@@ -76,6 +84,7 @@ export interface Item {
 
 export type Action =
   | ActionAdd
+  | ActionAddAll
   | ActionRemove
   | ActionCheck
   | ActionFilter
@@ -102,15 +111,16 @@ export const initialState: Store = {
 export const reducer = function (state = initialState, action: Action): Store {
   switch (action.type) {
     case ACTION_TYPES.REMOVE: {
-      return { ...state, list: [...state.list.filter(Item => Item.id !== action.payload)] };
+      return {
+        ...state,
+        list: [...state.list.filter(Item => Item.id !== action.payload)]
+      };
     }
     case ACTION_TYPES.ADD: {
-      const newTask = {
-        id: Math.random().toString(36).substr(2),
-        title: action.payload,
-        isChecked: false
-      };
-      return { ...state, list: [...state.list, newTask] };
+      return { ...state, list: [...state.list, action.payload] };
+    }
+    case ACTION_TYPES.ADD_ALL: {
+      return { ...state, list: [...action.payload] };
     }
     case ACTION_TYPES.CHECK: {
       for (let i = 0; i < state.list.length; i++) {
@@ -176,10 +186,12 @@ const setError = (error: string): ActionSetError => ({
   payload: error
 });
 
+const URL = 'http://localhost:3001';
+
 export const addNewElement = (title: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch(setRequestStatus(REQUEST_STATUS.LOADING));
-    const response = await fetch('http://localhost:3001/todos', {
+    const response = await fetch(`${URL}/todos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -190,9 +202,51 @@ export const addNewElement = (title: string) => async (dispatch: AppDispatch) =>
     });
     const data = await response.json();
     if (!response.ok) {
-      throw Error(response.statusText);
+      throw Error(data.error);
     }
     dispatch({ type: ACTION_TYPES.ADD, payload: data });
+    dispatch(setRequestStatus(REQUEST_STATUS.SUCCESS));
+  } catch (error) {
+    dispatch(setError(error.message));
+    dispatch(setRequestStatus(REQUEST_STATUS.ERROR));
+  }
+};
+
+export const getAllElements = () => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(setRequestStatus(REQUEST_STATUS.LOADING));
+    const response = await fetch(`${URL}/todos`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw Error(data.error);
+    }
+    dispatch({ type: ACTION_TYPES.ADD_ALL, payload: data });
+    dispatch(setRequestStatus(REQUEST_STATUS.SUCCESS));
+  } catch (error) {
+    dispatch(setError(error.message));
+    dispatch(setRequestStatus(REQUEST_STATUS.ERROR));
+  }
+};
+
+export const removeElement = (id: string) => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(setRequestStatus(REQUEST_STATUS.LOADING));
+    const response = await fetch(`${URL}/todos/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw Error(data.error);
+    }
+    dispatch({ type: ACTION_TYPES.REMOVE, payload: data });
     dispatch(setRequestStatus(REQUEST_STATUS.SUCCESS));
   } catch (error) {
     dispatch(setError(error.message));
