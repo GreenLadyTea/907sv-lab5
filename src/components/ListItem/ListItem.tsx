@@ -1,29 +1,24 @@
 import React from 'react';
 import './ListItem.css';
-import { check, removeElement } from '../../store';
+import { Item } from '../../store';
 import { useDispatch } from 'react-redux';
+import { check, removeElement } from '../../store/actions';
 
-type ListItemProps = {
-  title: string;
-  id: string;
-  isChecked: boolean;
-};
-
-export default function ListItem({ title, id, isChecked }: ListItemProps) {
+export default function ListItem(item: Item) {
   const dispatch = useDispatch();
   return (
     <>
       <div>
         <input
           type="checkbox"
-          checked={isChecked}
+          checked={item.isChecked}
           data-testid="checkbox"
-          onChange={() => dispatch(check(id))}
+          onChange={() => dispatch(check(item.id))}
         />
         <div className="task" data-testid="task">
-          {title}
+          {item.title}
         </div>
-        <button data-testid="delete-button" onClick={() => dispatch(removeElement(id))}>
+        <button data-testid="delete-button" onClick={() => dispatch(removeElement(item.id))}>
           X
         </button>
       </div>

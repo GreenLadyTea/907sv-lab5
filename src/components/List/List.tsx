@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ListItem from '../ListItem/ListItem';
-import { selectFilteredList } from '../../selector';
-import { getAllElements } from '../../store';
+import { selectFilteredList } from '../../store/selector';
+import { getAllElements } from '../../store/actions';
 
 export default function List() {
   const listState = useSelector(selectFilteredList);

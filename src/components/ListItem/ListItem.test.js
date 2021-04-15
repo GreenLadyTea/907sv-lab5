@@ -1,8 +1,10 @@
 import React from 'react';
 import { screen, fireEvent } from '@testing-library/react';
 import ListItem from './ListItem';
-import { SELECTOR_TYPES, remove, check } from '../../store';
 import { makeTestStore, testRender } from '../../setupTests';
+import { SELECTOR_TYPES } from '../../store/selector';
+import { check, remove } from '../../store/actions';
+import { REQUEST_STATUS } from '../../store';
 
 const task = 'Принять таблетки';
 const id = '1';
@@ -17,7 +19,9 @@ const initialState = {
     }
   ],
   filtered: SELECTOR_TYPES.ALL,
-  searchBar: ''
+  searchBar: '',
+  requestStatus: REQUEST_STATUS.IDLE,
+  error: ''
 };
 
 const store = makeTestStore({ initialState });

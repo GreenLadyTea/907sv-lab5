@@ -1,6 +1,8 @@
 import React from 'react';
-import { SELECTOR_TYPES, Store, search, filter } from '../../store';
+import { Store } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
+import { SELECTOR_TYPES } from '../../store/selector';
+import { filter, search } from '../../store/actions';
 
 export default function Filter() {
   const options = [SELECTOR_TYPES.ALL, SELECTOR_TYPES.DONE, SELECTOR_TYPES.NOT_DONE];
@@ -20,7 +22,6 @@ export default function Filter() {
         </label>
         {options.map(item => (
           <>
-            {/* eslint-disable-next-line */}
             <a key={item} onClick={() => dispatch(filter(item))}>
               {item}{' '}
             </a>

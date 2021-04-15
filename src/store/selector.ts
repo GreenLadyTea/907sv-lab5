@@ -1,4 +1,15 @@
-import { SELECTOR_TYPES, Store } from './store';
+import { Store } from './index';
+
+export enum SELECTOR_TYPES {
+  ALL = 'Все',
+  DONE = 'Выполненные',
+  NOT_DONE = 'Невыполненные'
+}
+
+export type SELECTOR_TYPE =
+  | typeof SELECTOR_TYPES.ALL
+  | typeof SELECTOR_TYPES.DONE
+  | typeof SELECTOR_TYPES.NOT_DONE;
 
 export function selectByChecked(state: Store): Store {
   if (state.filtered === SELECTOR_TYPES.DONE) {

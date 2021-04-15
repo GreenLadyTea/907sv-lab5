@@ -1,5 +1,5 @@
-import { selectByChecked, selectBySearchBar, selectFilteredList } from './selector';
-import { SELECTOR_TYPES } from './store';
+import { selectByChecked, selectBySearchBar, selectFilteredList, SELECTOR_TYPES } from './selector';
+import { REQUEST_STATUS } from './index';
 
 let state;
 
@@ -25,7 +25,9 @@ beforeEach(() => {
   state = {
     list: array,
     filtered: SELECTOR_TYPES.ALL,
-    searchBar: ''
+    searchBar: '',
+    requestStatus: REQUEST_STATUS.IDLE,
+    error: ''
   };
 });
 

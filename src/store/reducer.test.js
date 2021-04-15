@@ -1,17 +1,8 @@
-import {
-  ACTION_TYPES,
-  SELECTOR_TYPES,
-  initialState,
-  reducer,
-  add,
-  remove,
-  check,
-  filter,
-  search
-} from './store';
+import { reducer } from './reducer';
+import { SELECTOR_TYPES } from './selector';
+import { ACTION_TYPES, initialState, REQUEST_STATUS } from './index';
 
 let state;
-const title = 'абв123';
 
 beforeEach(() => {
   const array = [
@@ -35,22 +26,28 @@ beforeEach(() => {
   state = {
     list: array,
     filtered: SELECTOR_TYPES.ALL,
-    searchBar: ''
+    searchBar: '',
+    requestStatus: REQUEST_STATUS.IDLE,
+    error: ''
   };
 });
 
 test('При вызове редьюсера с экшеном add возвращается состояние стора, в котором добавлен новый элемент', () => {
-  const field = 'field';
+  const item = {
+    id: 'teg367373',
+    title: 'field',
+    isChecked: false
+  };
   const add = {
     type: ACTION_TYPES.ADD,
-    payload: field
+    payload: item
   };
   const result = reducer(initialState, add);
   expect(result.list).toHaveLength(1);
-  expect(result.list[0].title).toEqual(field);
+  expect(result.list[0].title).toEqual(item.title);
 });
 
-test('При вызове редьюсера с экшеном delete возвращается состояние стора, в котором удалён указанный элемент', () => {
+test('При вызове редьюсера с экшеном remove возвращается состояние стора, в котором удалён указанный элемент', () => {
   const id = '1';
   const remove = {
     type: ACTION_TYPES.REMOVE,
@@ -91,45 +88,4 @@ test('При вызове редьюсера с экшеном search возвр
   };
   const result = reducer(state, search);
   expect(result.searchBar).toEqual(stringForSearch);
-});
-
-test('Создатель экшна add создает новый экшн типа ADD и с payload равным тому, что ему было передано в параметре', () => {
-  const expectedAction = {
-    type: ACTION_TYPES.ADD,
-    payload: title
-  };
-  expect(add(title)).toEqual(expectedAction);
-});
-
-test('Создатель экшна remove создает новый экшн типа REMOVE и с payload равным тому, что ему было передано в параметре', () => {
-  const expectedAction = {
-    type: ACTION_TYPES.REMOVE,
-    payload: title
-  };
-  expect(remove(title)).toEqual(expectedAction);
-});
-
-test('Создатель экшна check создает новый экшн типа CHECK и с payload равным тому, что ему было передано в параметре', () => {
-  const expectedAction = {
-    type: ACTION_TYPES.CHECK,
-    payload: title
-  };
-  expect(check(title)).toEqual(expectedAction);
-});
-
-test('Создатель экшна filter создает новый экшн типа FILTER и с payload равным тому, что ему было передано в параметре', () => {
-  const selector = SELECTOR_TYPES.DONE;
-  const expectedAction = {
-    type: ACTION_TYPES.FILTER,
-    payload: selector
-  };
-  expect(filter(SELECTOR_TYPES.DONE)).toEqual(expectedAction);
-});
-
-test('Создатель экшна search создает новый экшн типа SEARCH и с payload равным тому, что ему было передано в параметре', () => {
-  const expectedAction = {
-    type: ACTION_TYPES.SEARCH,
-    payload: title
-  };
-  expect(search(title)).toEqual(expectedAction);
 });

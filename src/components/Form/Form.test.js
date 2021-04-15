@@ -1,8 +1,10 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import Form from './Form';
-import { SELECTOR_TYPES, add } from '../../store';
 import { makeTestStore, testRender } from '../../setupTests';
+import { SELECTOR_TYPES } from '../../store/selector';
+import { add } from '../../store/actions';
+import { REQUEST_STATUS } from '../../store';
 
 const initialState = {
   list: [
@@ -13,7 +15,9 @@ const initialState = {
     }
   ],
   filtered: SELECTOR_TYPES.ALL,
-  searchBar: ''
+  searchBar: '',
+  requestStatus: REQUEST_STATUS.IDLE,
+  error: ''
 };
 
 const store = makeTestStore({ initialState });

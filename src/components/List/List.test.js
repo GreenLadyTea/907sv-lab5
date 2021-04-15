@@ -1,8 +1,10 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import List from './List';
-import { SELECTOR_TYPES, remove, check } from '../../store';
 import { makeTestStore, testRender } from '../../setupTests';
+import { SELECTOR_TYPES } from '../../store/selector';
+import { check, remove } from '../../store/actions';
+import { REQUEST_STATUS } from '../../store';
 
 const list = [
   {
@@ -30,7 +32,9 @@ const list = [
 const initialState = {
   list: list,
   filtered: SELECTOR_TYPES.ALL,
-  searchBar: ''
+  searchBar: '',
+  requestStatus: REQUEST_STATUS.IDLE,
+  error: ''
 };
 
 test('Компонент выводит каждый элемент списка', () => {

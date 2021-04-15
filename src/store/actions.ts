@@ -1,40 +1,5 @@
-import thunkMiddleware from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
-
-export enum ACTION_TYPES {
-  ADD = 'add',
-  ADD_ALL = 'add_all',
-  REMOVE = 'remove',
-  CHECK = 'check',
-  FILTER = 'filter',
-  SEARCH = 'search',
-  SET_REQUEST_STATUS = 'setRequestStatus',
-  SET_ERROR = 'setError'
-}
-
-export enum REQUEST_STATUS {
-  IDLE,
-  LOADING,
-  SUCCESS,
-  ERROR
-}
-
-type REQUEST_STATUS_TYPE =
-  | typeof REQUEST_STATUS.ERROR
-  | typeof REQUEST_STATUS.IDLE
-  | typeof REQUEST_STATUS.SUCCESS
-  | typeof REQUEST_STATUS.LOADING;
-
-export enum SELECTOR_TYPES {
-  ALL = 'Все',
-  DONE = 'Выполненные',
-  NOT_DONE = 'Невыполненные'
-}
-
-export type SELECTOR_TYPE =
-  | typeof SELECTOR_TYPES.ALL
-  | typeof SELECTOR_TYPES.DONE
-  | typeof SELECTOR_TYPES.NOT_DONE;
+import { SELECTOR_TYPE } from './selector';
+import { ACTION_TYPES, AppDispatch, Item, REQUEST_STATUS, REQUEST_STATUS_TYPE } from './index';
 
 export interface ActionAdd {
   type: typeof ACTION_TYPES.ADD;
@@ -76,12 +41,6 @@ export interface ActionSetError {
   payload: string;
 }
 
-export interface Item {
-  id: string;
-  title: string;
-  isChecked: boolean;
-}
-
 export type Action =
   | ActionAdd
   | ActionAddAll
@@ -91,65 +50,6 @@ export type Action =
   | ActionSearch
   | ActionSetRequestStatus
   | ActionSetError;
-
-export type Store = {
-  list: Item[];
-  filtered: SELECTOR_TYPE;
-  searchBar: string;
-  requestStatus: REQUEST_STATUS_TYPE;
-  error: string;
-};
-
-export const initialState: Store = {
-  list: [],
-  filtered: SELECTOR_TYPES.ALL,
-  searchBar: '',
-  requestStatus: REQUEST_STATUS.IDLE,
-  error: ''
-};
-
-export const reducer = function (state = initialState, action: Action): Store {
-  switch (action.type) {
-    case ACTION_TYPES.REMOVE: {
-      return {
-        ...state,
-        list: [...state.list.filter(Item => Item.id !== action.payload)]
-      };
-    }
-    case ACTION_TYPES.ADD: {
-      return { ...state, list: [...state.list, action.payload] };
-    }
-    case ACTION_TYPES.ADD_ALL: {
-      return { ...state, list: [...action.payload] };
-    }
-    case ACTION_TYPES.CHECK: {
-      for (let i = 0; i < state.list.length; i++) {
-        if (state.list[i].id === action.payload) {
-          state.list[i].isChecked = !state.list[i].isChecked;
-        }
-      }
-      return { ...state, list: [...state.list] };
-    }
-    case ACTION_TYPES.FILTER: {
-      return { ...state, filtered: action.payload };
-    }
-    case ACTION_TYPES.SEARCH: {
-      return { ...state, searchBar: action.payload };
-    }
-    case ACTION_TYPES.SET_REQUEST_STATUS: {
-      return { ...state, requestStatus: action.payload };
-    }
-    case ACTION_TYPES.SET_ERROR: {
-      return { ...state, error: action.payload };
-    }
-    default:
-      return state;
-  }
-};
-
-const store = createStore(reducer, applyMiddleware(thunkMiddleware));
-export type AppDispatch = typeof store.dispatch;
-export default store;
 
 export const add = (content: string) => ({
   type: ACTION_TYPES.ADD,
@@ -246,7 +146,7 @@ export const removeElement = (id: string) => async (dispatch: AppDispatch) => {
     if (!response.ok) {
       throw Error(data.error);
     }
-    dispatch({ type: ACTION_TYPES.REMOVE, payload: data });
+    dispatch({ type: ACTION_TYPES.REMOVE, payload: id });
     dispatch(setRequestStatus(REQUEST_STATUS.SUCCESS));
   } catch (error) {
     dispatch(setError(error.message));

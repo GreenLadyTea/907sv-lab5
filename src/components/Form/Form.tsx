@@ -1,7 +1,8 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import './Form.css';
-import { addNewElement, REQUEST_STATUS, setRequestStatus, Store } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
+import { REQUEST_STATUS, Store } from '../../store';
+import { addNewElement, setRequestStatus } from '../../store/actions';
 
 export default function Form() {
   const [field, setField] = useState('');
@@ -11,13 +12,13 @@ export default function Form() {
   useEffect(() => {
     if (requestStatus === REQUEST_STATUS.SUCCESS) {
       dispatch(setRequestStatus(REQUEST_STATUS.IDLE));
+      setField('');
     }
   }, [requestStatus]);
 
   function handleSubmitInner(e: FormEvent) {
     e.preventDefault();
     dispatch(addNewElement(field));
-    setField('');
   }
 
   return (

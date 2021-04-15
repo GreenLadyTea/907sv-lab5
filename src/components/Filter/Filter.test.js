@@ -1,8 +1,10 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import Filter from './Filter';
-import { SELECTOR_TYPES, initialState, search, filter } from '../../store';
 import { makeTestStore, testRender } from '../../setupTests';
+import { filter, search } from '../../store/actions';
+import { SELECTOR_TYPES } from '../../store/selector';
+import { initialState } from '../../store';
 
 const store = makeTestStore({ initialState });
 
