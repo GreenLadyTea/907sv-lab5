@@ -1,7 +1,7 @@
 import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import { SELECTOR_TYPE, SELECTOR_TYPES } from './selector';
-import { reducer } from './reducer';
+import reducer from './reducer';
 
 export enum ACTION_TYPES {
   ADD = 'add',
@@ -41,7 +41,7 @@ export type Store = {
   error: string;
 };
 
-export const initialState: Store = {
+const initialState: Store = {
   list: [],
   filtered: SELECTOR_TYPES.ALL,
   searchBar: '',
@@ -51,4 +51,5 @@ export const initialState: Store = {
 
 const store = createStore(reducer, applyMiddleware(thunkMiddleware));
 export type AppDispatch = typeof store.dispatch;
+export { reducer, initialState };
 export default store;

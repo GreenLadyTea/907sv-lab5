@@ -1,7 +1,7 @@
 import { Action } from './actions';
-import { ACTION_TYPES, initialState, Store } from './index';
+import { ACTION_TYPES, Store, initialState } from './index';
 
-export const reducer = function (state = initialState, action: Action): Store {
+export default function (state = initialState, action: Action): Store {
   switch (action.type) {
     case ACTION_TYPES.REMOVE: {
       return {
@@ -38,4 +38,4 @@ export const reducer = function (state = initialState, action: Action): Store {
     default:
       return state;
   }
-};
+}

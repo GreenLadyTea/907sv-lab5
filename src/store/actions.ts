@@ -51,7 +51,7 @@ export type Action =
   | ActionSetRequestStatus
   | ActionSetError;
 
-export const add = (content: string) => ({
+export const add = (content: Item): ActionAdd => ({
   type: ACTION_TYPES.ADD,
   payload: content
 });
@@ -104,7 +104,7 @@ export const addNewElement = (title: string) => async (dispatch: AppDispatch) =>
     if (!response.ok) {
       throw Error(data.error);
     }
-    dispatch({ type: ACTION_TYPES.ADD, payload: data });
+    dispatch(add(data));
     dispatch(setRequestStatus(REQUEST_STATUS.SUCCESS));
   } catch (error) {
     dispatch(setError(error.message));

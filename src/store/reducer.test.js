@@ -1,4 +1,4 @@
-import { reducer } from './reducer';
+import { reducer } from './index';
 import { SELECTOR_TYPES } from './selector';
 import { ACTION_TYPES, initialState, REQUEST_STATUS } from './index';
 
