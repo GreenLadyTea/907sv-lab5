@@ -21,11 +21,9 @@ export default function Filter() {
           />
         </label>
         {options.map(item => (
-          <>
-            <a key={item} onClick={() => dispatch(filter(item))}>
-              {item}{' '}
-            </a>
-          </>
+          <a key={item} onClick={() => dispatch(filter(item))}>
+            {item}{' '}
+          </a>
         ))}
       </div>
     </>

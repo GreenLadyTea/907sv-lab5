@@ -1,10 +1,11 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import List from './List';
-import { makeTestStore, testRender } from '../../setupTests';
-import { SELECTOR_TYPES } from '../../store/selector';
-import { check, remove } from '../../store/actions';
-import { REQUEST_STATUS } from '../../store';
+import { testRender } from '../../setupTests';
+import thunkMiddleware from 'redux-thunk';
+import configureStore from 'redux-mock-store';
+import fetchMock from 'fetch-mock';
+import { ACTION_TYPES, initialState as originalInitialState, REQUEST_STATUS } from '../../store';
 
 const list = [
   {
@@ -28,17 +29,18 @@ const list = [
     isChecked: false
   }
 ];
+const middlewares = [thunkMiddleware];
+const mockStore = configureStore(middlewares);
 
 const initialState = {
-  list: list,
-  filtered: SELECTOR_TYPES.ALL,
-  searchBar: '',
-  requestStatus: REQUEST_STATUS.IDLE,
-  error: ''
+  ...originalInitialState,
+  list: list
 };
 
+afterEach(() => fetchMock.reset());
+
 test('Компонент выводит каждый элемент списка', () => {
-  const store = makeTestStore({ initialState });
+  const store = mockStore(initialState);
   testRender(<List />, { store });
   const elements = screen.getAllByTestId('task');
   expect(elements).toHaveLength(list.length);
@@ -48,34 +50,37 @@ test('Компонент выводит каждый элемент списка
 });
 
 test('Кнопка в каждом элементе нажимается, при этом вызывается store.dispatch с параметром id', () => {
-  const store = makeTestStore({ initialState });
+  const store = mockStore(initialState);
   testRender(<List />, { store });
   const buttons = screen.getAllByTestId('delete-button');
   for (let i = 0; i < list.length; i++) {
     expect(buttons[i]).toBeInTheDocument();
-    expect(store.dispatch).not.toBeCalledWith(remove(list[i].id));
     fireEvent.click(buttons[i]);
-    expect(store.dispatch).toBeCalledWith(remove(list[i].id));
+    expect(store.getActions()[0]).toEqual({
+      type: ACTION_TYPES.SET_REQUEST_STATUS,
+      payload: REQUEST_STATUS.LOADING
+    });
   }
 });
 
 test('При отображении пустого списка выводится надпись "Нет дел в списке"', () => {
   initialState.list = [];
-  const store = makeTestStore({ initialState });
+  const store = mockStore(initialState);
   testRender(<List />, { store });
   const element = screen.getByTestId('list');
   expect(element).toHaveTextContent('Нет дел в списке');
 });
 
 test('Чекбокс в каждом элементе прокликивается, при этом вызывается store.dispatch с параметром id', () => {
-  initialState.list = list;
-  const store = makeTestStore({ initialState });
+  const store = mockStore(initialState);
   testRender(<List />, { store });
   const checkboxes = screen.getAllByTestId('checkbox');
   for (let i = 0; i < list.length; i++) {
     expect(checkboxes[i]).toBeInTheDocument();
-    expect(store.dispatch).not.toBeCalledWith(check(list[i].id));
     fireEvent.click(checkboxes[i]);
-    expect(store.dispatch).toBeCalledWith(check(list[i].id));
+    expect(store.getActions()[0]).toEqual({
+      type: ACTION_TYPES.SET_REQUEST_STATUS,
+      payload: REQUEST_STATUS.LOADING
+    });
   }
 });
