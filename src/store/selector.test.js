@@ -35,9 +35,7 @@ test('Функция фильтрации по строке поиска воз�
   const result = selectBySearchBar(state);
   expect(result.list).toHaveLength(3);
   for (let i = 0; i < state.list.length; i++) {
-    expect(result.list[i].id).toEqual(state.list[i].id);
-    expect(result.list[i].title).toEqual(state.list[i].title);
-    expect(result.list[i].isChecked).toEqual(state.list[i].isChecked);
+    expect(result.list[i]).toEqual(state.list[i]);
   }
 });
 
@@ -45,19 +43,15 @@ test('Функция фильтрации по строке поиска воз�
   state.searchBar = 'По';
   const result = selectBySearchBar(state);
   expect(result.list).toHaveLength(2);
-  expect(result.list[0].id).toEqual(state.list[1].id);
-  expect(result.list[0].title).toEqual(state.list[1].title);
-  expect(result.list[1].id).toEqual(state.list[2].id);
-  expect(result.list[1].title).toEqual(state.list[2].title);
+  expect(result.list[0]).toEqual(state.list[1]);
+  expect(result.list[1]).toEqual(state.list[2]);
 });
 
 test('Функция фильтрации по отметке в чекбоксах возвращает исходный список элементов, если тип фильтрации ALL', () => {
   const result = selectByChecked(state);
   expect(result.list).toHaveLength(3);
   for (let i = 0; i < state.list.length; i++) {
-    expect(result.list[i].id).toEqual(state.list[i].id);
-    expect(result.list[i].title).toEqual(state.list[i].title);
-    expect(result.list[i].isChecked).toEqual(state.list[i].isChecked);
+    expect(result.list[i]).toEqual(state.list[i]);
   }
 });
 
@@ -65,18 +59,14 @@ test('Функция фильтрации по отметке в чекбокс�
   state.filtered = SELECTOR_TYPES.DONE;
   const result = selectByChecked(state);
   expect(result.list).toHaveLength(1);
-  expect(result.list[0].title).toEqual(state.list[2].title);
-  expect(result.list[0].id).toEqual(state.list[2].id);
-  expect(result.list[0].isChecked).toEqual(state.list[2].isChecked);
+  expect(result.list[0]).toEqual(state.list[2]);
 });
 
 test('Функция фильтрации по отметке в чекбоксах возвращает список только неотмеченных галочкой элементов, если тип фильтрации NOT_DONE', () => {
   state.filtered = SELECTOR_TYPES.NOT_DONE;
   const result = selectByChecked(state);
   for (let i = 0; i < result.list.length; i++) {
-    expect(result.list[i].id).toEqual(state.list[i].id);
-    expect(result.list[i].title).toEqual(state.list[i].title);
-    expect(result.list[i].isChecked).toEqual(state.list[i].isChecked);
+    expect(result.list[i]).toEqual(state.list[i]);
   }
 });
 
@@ -84,9 +74,7 @@ test('При вызове selectFilteredList с текущим стейтом в
   const result = selectFilteredList(state);
   expect(result.list).toHaveLength(3);
   for (let i = 0; i < state.list.length; i++) {
-    expect(result.list[i].id).toEqual(state.list[i].id);
-    expect(result.list[i].title).toEqual(state.list[i].title);
-    expect(result.list[i].isChecked).toEqual(state.list[i].isChecked);
+    expect(result.list[i]).toEqual(state.list[i]);
   }
 });
 
@@ -94,26 +82,23 @@ test('При вызове selectFilteredList с текущим стейтом и
   state.filtered = SELECTOR_TYPES.DONE;
   const result = selectFilteredList(state);
   expect(result.list).toHaveLength(1);
-  expect(result.list[0].title).toEqual(state.list[2].title);
-  expect(result.list[0].id).toEqual(state.list[2].id);
+  expect(result.list[0]).toEqual(state.list[2]);
 });
 
 test('При вызове selectFilteredList с текущим стейтом и filtered = NOT_DONE возвращается измененный список, в котором только нечекнутые элементы', () => {
   state.filtered = SELECTOR_TYPES.NOT_DONE;
   const result = selectFilteredList(state);
   expect(result.list).toHaveLength(2);
-  expect(result.list[0].title).toEqual(state.list[0].title);
-  expect(result.list[0].id).toEqual(state.list[0].id);
-  expect(result.list[1].title).toEqual(state.list[1].title);
-  expect(result.list[1].id).toEqual(state.list[1].id);
+  expect(result.list[0]).toEqual(state.list[0]);
+  expect(result.list[1]).toEqual(state.list[1]);
 });
 
 test('При вызове selectFilteredList c заданной строкой поиска возвращается список, в котором отображаются только содержащие её элементы', () => {
   state.searchBar = 'По';
   const result = selectFilteredList(state);
   expect(result.list).toHaveLength(2);
-  expect(result.list[0].title).toEqual(state.list[1].title);
-  expect(result.list[1].title).toEqual(state.list[2].title);
+  expect(result.list[0]).toEqual(state.list[1]);
+  expect(result.list[1]).toEqual(state.list[2]);
 });
 
 test('При вызове selectFilteredList и filtered = DONE c заданной строкой поиска возвращается список, в котором отображаются только содержащие её чекнутые элементы', () => {
@@ -121,7 +106,7 @@ test('При вызове selectFilteredList и filtered = DONE c заданно
   state.filtered = SELECTOR_TYPES.DONE;
   const result = selectFilteredList(state);
   expect(result.list).toHaveLength(1);
-  expect(result.list[0].title).toEqual(state.list[2].title);
+  expect(result.list[0]).toEqual(state.list[2]);
 });
 
 test('При вызове selectFilteredList и filtered = NOT_DONE c заданной строкой поиска возвращается список, в котором отображаются только содержащие её нечекнутые элементы', () => {
@@ -129,5 +114,5 @@ test('При вызове selectFilteredList и filtered = NOT_DONE c задан
   state.filtered = SELECTOR_TYPES.NOT_DONE;
   const result = selectFilteredList(state);
   expect(result.list).toHaveLength(1);
-  expect(result.list[0].title).toEqual(state.list[1].title);
+  expect(result.list[0]).toEqual(state.list[1]);
 });

@@ -15,10 +15,10 @@ export enum ACTION_TYPES {
 }
 
 export enum REQUEST_STATUS {
-  IDLE,
-  LOADING,
-  SUCCESS,
-  ERROR
+  IDLE = '0',
+  LOADING = '1',
+  SUCCESS = '2',
+  ERROR = '3'
 }
 
 export type REQUEST_STATUS_TYPE =

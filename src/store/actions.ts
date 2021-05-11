@@ -81,7 +81,7 @@ export const setRequestStatus = (requestStatus: REQUEST_STATUS_TYPE): ActionSetR
   payload: requestStatus
 });
 
-const setError = (error: string): ActionSetError => ({
+export const setError = (error: string): ActionSetError => ({
   type: ACTION_TYPES.SET_ERROR,
   payload: error
 });
