@@ -95,7 +95,7 @@ test('Создатель экшна setRequestStatus создает новый �
 test('Создатель экшна setError создает новый экшн типа SET_ERROR и с payload равным тому, что ему было передано в параметре', () => {
   const error = 'ошибка';
   const expectedAction = {
-    type: ACTION_TYPES.SET_REQUEST_STATUS,
+    type: ACTION_TYPES.SET_ERROR,
     payload: error
   };
   expect(setError(error)).toEqual(expectedAction);

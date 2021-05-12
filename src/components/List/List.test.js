@@ -64,8 +64,11 @@ test('Кнопка в каждом элементе нажимается, при
 });
 
 test('При отображении пустого списка выводится надпись "Нет дел в списке"', () => {
-  initialState.list = [];
-  const store = mockStore(initialState);
+  const emptyState = {
+    ...originalInitialState,
+    list: []
+  };
+  const store = mockStore(emptyState);
   testRender(<List />, { store });
   const element = screen.getByTestId('list');
   expect(element).toHaveTextContent('Нет дел в списке');
